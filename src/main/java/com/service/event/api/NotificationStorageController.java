@@ -5,12 +5,18 @@ import com.service.event.repository.NotificationRepository;
 import com.service.event.repository.NotificationStorgeRepository;
 import com.service.event.service.NotificationStorgeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 @CrossOrigin(originPatterns = "*", allowedHeaders = "*", allowCredentials = "true")
 @RequestMapping("/notification")
@@ -63,6 +69,25 @@ public class NotificationStorageController {
     @DeleteMapping("/clearbyid/{notifID}")
     public void clearNotifbyid(@PathVariable String notifID) {
         notifService.clearByid(notifID);
+    }
+
+    @GetMapping("/findbycreateddate")
+    public Page<Notification> getNotificationsByCreatedAt(
+            @RequestParam(value = "createdAt", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAt,
+            @RequestParam(defaultValue = "1") int page,
+            @PageableDefault(size = 10) Pageable pageable) {
+        pageable = PageRequest.of(page, pageable.getPageSize(), pageable.getSort());
+
+        if(createdAt==null){return notifService.getAllNotification(pageable);}
+        else{
+            Date startDate = Date.from(createdAt.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+            calendar.add(Calendar.DAY_OF_MONTH, 1); // Adding 1 day to include notifications until the end of the day
+            Date endDate = calendar.getTime();
+            return notifRepo.findByCreatedAt(startDate, endDate,pageable);
+        }
+
     }
 
 

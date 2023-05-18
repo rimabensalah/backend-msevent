@@ -18,6 +18,7 @@ import sibModel.SendSmtpEmailTo;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -64,6 +65,14 @@ public class NotificationStorgeService {
         return notifs;
     }
 
+   /* public List<Notification> getnotificationBycreatedate(Date createAt){
+        if(createAt==null){
+            return notifRepository.findAll();
+        }else {
+            return  notifRepository.findByCreatedAt(createAt);
+        }
+
+    }*/
 
     public void clear() {
         notifRepository.deleteAll();
