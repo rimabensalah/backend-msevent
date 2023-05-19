@@ -109,7 +109,7 @@ public class EventService {
        return userRepo.save(userData);
    }
 
-   //public Utilisateur addBookmarkedByid(Long idEvent,Long idUser)
+
 
     //add comment to event
     public Evenement addComment(CommentRequest commentRequest)
