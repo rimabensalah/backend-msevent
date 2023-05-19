@@ -20,10 +20,7 @@ public class CodeInputController {
     CodeInputService codeInputService;
     @Autowired
     private CodeInputRepository codeInputRepository;
-   /* @PostMapping
-    public CodeInput saveCode(@RequestBody CodeInput codeinput) {
-        return  codeInputService.addCode(codeinput);
-    }*/
+
     @PostMapping
     public ResponseEntity<String> saveCode(@RequestBody Map<String, Object> body) {
         try {

@@ -27,11 +27,7 @@ public class FileController {
     @Autowired
     private FileRepository fileRepo;
 
-    //upload file
-    /*@PostMapping("/upload")
-    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) throws IOException {
-        return new ResponseEntity<>(fileService.addFile(file), HttpStatus.OK);
-    }*/
+
     @PostMapping("/photos/add")
     public ResponseEntity<?> addPhoto(@RequestParam("title") String title,
                            @RequestParam("image") MultipartFile image, Model model)throws IOException
