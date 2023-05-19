@@ -390,7 +390,7 @@ public class EventService {
 
     }
 
-    //@Scheduled(cron = "0 0 10 * * *")// will be executed every day at 10 am
+
     public List<Evenement> findPopularEvent() {
         List<Evenement> popularPosts = eventRepo.findAll();
         // Trier les events  en fonction du nombre de commentaires
@@ -411,7 +411,7 @@ public class EventService {
         });
         return popularPosts;
     }
-    //@Scheduled(cron = "0 0 0 * * *") // exécute la méthode tous les jours à minuit
+
     public List<EventMonthlyData> countEventEveryMonth(){
         Aggregation aggregation = newAggregation(
                 group("createdDate")
