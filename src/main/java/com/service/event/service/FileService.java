@@ -25,15 +25,7 @@ public class FileService {
     @Autowired
     private FileRepository fileRepo;
 
-    /*public String addFile(MultipartFile upload) throws IOException {
 
-        DBObject metadata = new BasicDBObject();
-        metadata.put("fileSize", upload.getSize());
-
-        Object fileID = template.store(upload.getInputStream(), upload.getOriginalFilename(), upload.getContentType(), metadata);
-
-        return fileID.toString();
-    }*/
     public String addFile(String filename, MultipartFile file) throws IOException {
         EventFile photo = new EventFile(filename);
         photo.setFile(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
