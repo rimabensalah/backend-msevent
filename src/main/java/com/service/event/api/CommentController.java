@@ -50,13 +50,7 @@ public class CommentController {
     }
 
 
-    /*@PostMapping("/post/{postId}")
-    public ResponseEntity<Comment> addComment(@PathVariable("postId") Long postId, @RequestBody Comment comment) {
 
-        Comment savedComment = commentRepository.save(comment);
-        simpMessagingTemplate.convertAndSendToUser(comment.().toString(), "/comments/" + postId, savedComment);
-        return ResponseEntity.ok(savedComment);
-    }*/
     @PostMapping("/post/{eventID}")
     public ResponseEntity<?> addComment(
             @PathVariable(value = "eventID") Long eventID,
