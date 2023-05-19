@@ -60,17 +60,7 @@ public class MessageService {
 
             // Remove "No message yet !" message for "to" user
             List<Message> newMessagesFrom = new ArrayList<>();
-           /* messagesFrom.stream().forEach(m -> {
-                if (m.getFrom().equals(message.getTo()) && m.getText().equals(NO_MESSAGE_TEXT)) {
-                    return;
-                }
 
-                if (m.getFrom().equals(m.getTo()) && m.getText().equals(NO_MESSAGE_TEXT)) {
-                    return;
-                }
-
-                newMessagesFrom.add(m);
-            });*/
 
             messageForMap.get(message.getTo()).clear();
             messageForMap.get(message.getFrom()).clear();
