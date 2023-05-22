@@ -55,5 +55,10 @@ public class Evenement {
     private List<Comment> comments;
     private Boolean isValidate = false;
 
-
+    public Evenement(Long id , String title ,String content ,LocalDateTime createdDate ) {
+        this.id = id;
+        this.title=title;
+        this.content=content;
+        this.createdDate=createdDate;
+    }
 }

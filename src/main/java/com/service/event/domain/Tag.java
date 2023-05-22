@@ -21,6 +21,11 @@ public class Tag {
     private String id;
     private String tagName ;
 
+    public Tag(String id,String tagName) {
+        this.id = id;
+        this.tagName=tagName;
+    }
+
     @DBRef
     private Set<Evenement> events_ids;
 
