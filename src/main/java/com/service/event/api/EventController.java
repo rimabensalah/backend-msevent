@@ -931,4 +931,8 @@ public class EventController {
     public List<UserPostCount> getTopUsersByPostCount() {
         return eventService.findTop3UsersByPostCount();
     }
+    @GetMapping("/{eventid}/comments")
+    public List<Comment> getPostComments(@PathVariable("eventid") Long eventid) {
+        return eventService.findAnswersByPostId(eventid);
+    }
 }

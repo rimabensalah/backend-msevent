@@ -16,9 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -39,7 +37,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+
 @Service
 public class EventService {
     @Autowired
@@ -437,6 +435,26 @@ public class EventService {
         return results.getMappedResults();
     }
 
+    public List<EventMonthlyData> groupByCreatedDateUser(Long userid) {
+        TypedAggregation<Evenement> aggregation = newAggregation(Evenement.class,
+                match(Criteria.where("user").is(userid)),
+                project("createdDate", "title")
+                        .andExpression("year(createdDate)").as("year")
+                        .andExpression("month(createdDate)").as("month"),
+                group("year", "month")
+                        .count().as("count")
+                        .first("year").as("year")
+                        .first("month").as("month"),
+             /*   project("year", "month", "count")
+                        .and(ConvertOperators.ToString.valueOf("month")).as("monthString")
+                        .and(ConvertOperators.ToString.valueOf("year")).as("yearString")
+                        .andExpression("concat(monthString, '-', yearString)").as("monthYear"),*/
+                sort(Sort.Direction.ASC, "year", "month")
+        );
+        AggregationResults<EventMonthlyData> results = mongoTemplate.aggregate(aggregation, EventMonthlyData.class);
+        return results.getMappedResults();
+    }
+
     public List<Document> groupByTag(){
 
         Aggregation aggregation = Aggregation.newAggregation(
@@ -464,6 +482,7 @@ public class EventService {
             long validatedEvent=validatedEventByUser(id);
             List<Evenement> popularevent=findPopularEvent();
             List<EventMonthlyData> countEventEveryMonth=groupByCreatedDate();
+            List<EventMonthlyData> countEventEveryMonthuser=groupByCreatedDateUser(id);
             List<Document> countEventByTag=groupByTag();
            // List<Evenement> eventbycontibutor=findPostsByContributor(id);
             //long numVotes = voteRepository.countByUser(user);
@@ -474,6 +493,7 @@ public class EventService {
             stats.put("validatedEvent",validatedEvent);
             stats.put("popularevent",popularevent);
             stats.put("countEventEveryMonth",countEventEveryMonth);
+            stats.put("countEventEveryMonthuser",countEventEveryMonthuser);
             stats.put("countEventByTag",countEventByTag);
             System.out.println("Statistiques d'utilisation pour l'utilisateur " + userRepo.findById(id).get().getUsername() + ":");
             System.out.println("- Nombre de questions posées : " + numQuestions);

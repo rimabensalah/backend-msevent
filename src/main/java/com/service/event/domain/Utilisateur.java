@@ -25,9 +25,11 @@ public class Utilisateur {
     private String userRole;
 
     @DBRef
-   @JsonIgnore
+    @JsonIgnore
     private List<Evenement> bookmarked;
 
     private  List<Long> bookmarkedId;
+
+    private String resetToken;
 
 }

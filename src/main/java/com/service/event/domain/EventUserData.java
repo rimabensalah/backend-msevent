@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventMonthlyData {
-    private int month;
-    private int year;
+public class EventUserData {
+    private Long userid;
     private int count;
-    private String monthYear;
+    private Set<String> titles;
 }
