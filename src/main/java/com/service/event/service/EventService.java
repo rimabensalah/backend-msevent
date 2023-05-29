@@ -1,5 +1,6 @@
 package com.service.event.service;
 
+import com.sendgrid.Content;
 import com.service.event.domain.*;
 
 import com.service.event.payload.response.CommentRequest;
@@ -62,6 +63,8 @@ public class EventService {
 
     @Autowired
     private NotificationStorgeRepository notificationStorgeRepository;
+    @Autowired
+    MailService mailService;
     public EventService(MongoOperations mongoOperations) {
         this.mongoOperations = mongoOperations;
     }
@@ -192,7 +195,10 @@ public class EventService {
               .createdAt(new Date()).build());
 
       // émettre l'événement de commentaire ajouté
-
+      final String url = "http://localhost:3000/singleevent/"+eventid;
+      Content content = new Content("text/plain", "new like is added  from ," +comment.getFromUser().getUsername()+
+              " to more details Please click on the following link : "+ url);
+      mailService.sendTextEmail("new like is added" +comment.getFromUser().getUsername(),content);
         return commentRepo.save(comment);
     }
 
@@ -254,7 +260,13 @@ public class EventService {
         }else{
             comment.getVoteUsers().add(votedUser);
         }
-
+        notifService.createNotificationStorage(Notification.builder()
+                .delivered(false)
+                .content("new vote from " + user.getUsername())
+                .notificationType(NotificationType.vote)
+                .userFrom(user)
+                .userTo(comment.getFromUser())
+                .createdAt(new Date()).build());
 
         return commentRepo.save(comment);
     }
@@ -277,6 +289,13 @@ public class EventService {
     public Comment validateComment(String idcomment){
         Comment comment = commentRepo.findById(idcomment).get();
         comment.setValidateComment(true);
+        notifService.createNotificationStorage(Notification.builder()
+                .delivered(false)
+                .content("your comment is validated ! " )
+                .notificationType(NotificationType.validate)
+                .userFrom(comment.getFromUser())
+                .userTo(comment.getFromUser())
+                .createdAt(new Date()).build());
         return commentRepo.save(comment);
     }
     public Evenement validate (Long eventid, String commentid){
@@ -286,7 +305,13 @@ public class EventService {
         comment.setValidateComment(true);
         eventRepo.save(evenementData);
         commentRepo.save(comment);
-
+        notifService.createNotificationStorage(Notification.builder()
+                .delivered(false)
+                .content("your comment is validated  from ! "+evenementData.getUser().getUsername() )
+                .notificationType(NotificationType.validate)
+                .userFrom(evenementData.getUser())
+                .userTo(comment.getFromUser())
+                .createdAt(new Date()).build());
 
         return eventRepo.findEvenementById(eventid).get();
     }

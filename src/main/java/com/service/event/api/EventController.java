@@ -2,13 +2,11 @@ package com.service.event.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sendgrid.Content;
 import com.service.event.domain.*;
 import com.service.event.payload.response.MessageReponse;
 import com.service.event.repository.*;
-import com.service.event.service.EventService;
-import com.service.event.service.NotificationStorgeService;
-import com.service.event.service.SendinblueTransactionalEmailsApi;
-import com.service.event.service.ServerWebSocketHandler;
+import com.service.event.service.*;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +52,8 @@ public class EventController {
     public SendinblueTransactionalEmailsApi sendinblue;
     @Autowired
     ServerWebSocketHandler  serverWebSocketHandler;
-
+    @Autowired
+    MailService mailService;
     /* @GetMapping("/stream")
      public Flux<ServerSentEvent<List<Evenement>>> streamPosts() {
          return postService.streamPosts();
@@ -338,12 +337,15 @@ public class EventController {
               /*notifService.sendNotification("ryma.bensalah@esprit.tn",
                       "New Like on Post",
                       "Your post has been liked by someone.");*/
-          /* final String url = "http://localhost:3000/singleevent/${eventID}";
-            sendinblue.sendMail("new comment  ", eventData.getUser().getUsername(), "ryma.bensalah@esprit.tn",
+          /*final String url = "http://localhost:3000/singleevent/${eventID}";
+            sendinblue.sendMail("new comment is added", eventData.getUser().getUsername(), "ryma.bensalah@esprit.tn",
                     "Visit this url : "+ url);*/
            /* String toEmail = "ryma.bensalah@esprit.tn";
             sendinblue.sendCommentNotification(toEmail,"Visit this url : "+ url);*/
-
+            final String url = "http://localhost:3000/singleevent/"+eventID;
+            Content content = new Content("text/plain", "new comment is added ," +
+                    " to more details Please click on the following link : "+ url);
+            mailService.sendTextEmail("new comment is added",content);
             serverWebSocketHandler.notifyCommentAdded(eventData,commentRepo.save(commentRequest));
             //serverWebSocketHandler.notifyCommentAdded2(eventData,commentRepo.save(commentRequest),eventData.getUser().getUsername());
             return ResponseEntity.ok(eventRepo.save(eventData));
