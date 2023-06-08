@@ -168,7 +168,12 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
+    <distributionManagement>
+        <snapshotRepository>
+            <id>soprahr-snapshots</id>
+            <url>http://hra-nexus.ptx.fr.sopra/content/repositories/soprahr-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
     <build>
         <plugins>
             <plugin>
