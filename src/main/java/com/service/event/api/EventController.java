@@ -27,6 +27,8 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -345,7 +347,7 @@ public class EventController {
             final String url = "http://localhost:3000/singleevent/"+eventID;
             Content content = new Content("text/plain", "new comment is added ," +
                     " to more details Please click on the following link : "+ url);
-            mailService.sendTextEmail("new comment is added",content);
+            //mailService.sendTextEmail("new comment is added",content);
             serverWebSocketHandler.notifyCommentAdded(eventData,commentRepo.save(commentRequest));
             //serverWebSocketHandler.notifyCommentAdded2(eventData,commentRepo.save(commentRequest),eventData.getUser().getUsername());
             return ResponseEntity.ok(eventRepo.save(eventData));
@@ -937,4 +939,43 @@ public class EventController {
     public List<Comment> getPostComments(@PathVariable("eventid") Long eventid) {
         return eventService.findAnswersByPostId(eventid);
     }
+    /*@GetMapping("/eventStats")
+    public EventStats getEventStats(@RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date start,
+                                    @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date end) {
+        return eventService.getEventStats(start, end);
+    }*/
+    @GetMapping("/eventStats")
+    public EventStats getEventStats() {
+        return eventService.getEventStats();
+    }
+   /* @GetMapping("/stats")
+    public List<EventStats> getEventStatsByMonth(@RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd") Date start,
+                                                 @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") Date end) {
+        List<Evenement> events = eventRepo.findByCreatedDateBetweenAndIsValidate(start, end);
+
+        Map<YearMonth, Integer> totalEventCountMap = events.stream()
+                .collect(Collectors.groupingBy(event -> YearMonth.from(event.getCreatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()), Collectors.summingInt(e -> 1)));
+
+        Map<YearMonth, Integer> validEventCountMap = events.stream()
+                .filter(Evenement::isValidate)
+                .collect(Collectors.groupingBy(event -> YearMonth.from(event.getCreatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()), Collectors.summingInt(e -> 1)));
+
+        List<EventStats> eventStatsList = new ArrayList<>();
+
+        for (YearMonth yearMonth : totalEventCountMap.keySet()) {
+            int totalEventCount = totalEventCountMap.getOrDefault(yearMonth, 0);
+            int validEventCount = validEventCountMap.getOrDefault(yearMonth, 0);
+
+            EventStats eventStats = new EventStats();
+            eventStats.setYear(yearMonth.getYear());
+            eventStats.setMonth(yearMonth.getMonthValue());
+            eventStats.setTotalEventCount(totalEventCount);
+            eventStats.setValidEventCount(validEventCount);
+
+            eventStatsList.add(eventStats);
+        }
+
+        return eventStatsList;
+    }*/
+
 }

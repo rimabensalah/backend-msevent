@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 
 @Service
 public class EventService {
@@ -584,6 +585,7 @@ public class EventService {
         List<EventMonthlyData> countEventEveryMonth=groupByCreatedDate();
         List<Evenement> recentEvents=eventRepo.findTop5ByOrderByCreatedDateDesc();
         List<Notification> recentActivity=notificationStorgeRepository.findTop5ByOrderByCreatedAtDesc();
+
         stats.put("numQuestions",numQuestions);
         stats.put("eventMonth",eventMonhth);
         stats.put("numAnswers",numAnswers);
@@ -591,6 +593,7 @@ public class EventService {
         stats.put("totalTag",numTags);
         stats.put("recentEvents",recentEvents);
         stats.put("recentActivity",recentActivity);
+
 
         System.out.println("Statistiques d'utilisation pour l'admin " +  ":");
         System.out.println("- Nombre de questions posées : " + numQuestions);
@@ -604,5 +607,61 @@ public class EventService {
         return stats;
     }
 
+
+    public List<EventStats> getPostStats() {
+        return eventRepo.getEventStatsByMonth();
+    }
+    public int getTotalEventCount(Date start, Date end) {
+        List<Evenement> events = eventRepo.findByCreatedDateBetween(start, end);
+        return events.size();
+    }
+
+    public int getValidEventCount(Date start, Date end) {
+        List<Evenement> validEvents = eventRepo.findByCreatedDateBetweenAndIsValidate(start, end, true);
+        return validEvents.size();
+    }
+    public EventStats getEventStats(Date start, Date end) {
+        EventStats eventStats = new EventStats();
+        List<Evenement> events = eventRepo.findByCreatedDateBetween(start, end);
+
+        int totalEventCount = events.size();
+        int validEventCount = 0;
+
+        for (Evenement event : events) {
+            if (event.getIsValidate()) {
+                validEventCount++;
+            }
+        }
+        eventStats.setTotalEventCount(eventRepo.findByCreatedDateBetween(start, end).size());
+        eventStats.setValidEventCount(eventRepo.findByCreatedDateBetweenAndIsValidate(start, end, true).size());
+        return eventStats;
+    }
+    public EventStats getEventStats() {
+        EventStats eventStats = new EventStats();
+        List<Evenement> events = eventRepo.findAllByOrderByCreatedDateAsc();
+
+        if (!events.isEmpty()) {
+            LocalDateTime startDate = events.get(0).getCreatedDate();
+            Date dateStart = Date.from(startDate.atZone(ZoneId.systemDefault()).toInstant());
+            Date endDate = getLocalEndDate();
+
+            List<Evenement> eventsInRange = eventRepo.findByCreatedDateBetweenAndIsValidate(dateStart, endDate, true);
+
+            int totalEventCount = events.size();
+            int validEventCount = eventsInRange.size();
+
+            eventStats.setTotalEventCount(totalEventCount);
+            eventStats.setValidEventCount(validEventCount);
+        }
+
+        return eventStats;
+    }
+
+    private Date getLocalEndDate() {
+        // Logique pour obtenir la date locale de fin
+        // Remplacez cette méthode par votre propre implémentation
+        Date endDate = new Date(); // Exemple : date actuelle
+        return endDate;
+    }
 
 }

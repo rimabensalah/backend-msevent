@@ -19,6 +19,8 @@ import java.util.Set;
 public interface EventRepository extends MongoRepository<Evenement,Long> {
 
     List<Evenement> findAllByTagsIn(Set<Tag> tags);
+    @Query("{$group: {_id: { $month: '$createdDate'}, validEventCount: {$sum: {$cond: ['$isValide', 1, 0]}}, totalEventCount: {$sum: 1}}}")
+    List<EventStats> getEventStatsByMonth();
     List<Evenement> findFirst4ByTagsIn(Set<Tag> tags);
     //First5
     Page<Evenement> findAllByTagsIn(Set<Tag> tags, Pageable pageable);
@@ -46,6 +48,9 @@ public interface EventRepository extends MongoRepository<Evenement,Long> {
     List<Evenement> findByUserAndCreatedDateBetween(Long userId, Date start, Date end);
     //@Query("{ 'createdDate' : { $gte: ?1, $lt: ?2 } }")
     List<Evenement> findByCreatedDateBetween(Date start,Date end);
+    List<Evenement> findAllByOrderByCreatedDateAsc();
+    List<Evenement> findByCreatedDateBetweenAndIsValidate(Date start, Date end, boolean isValidate);
+    List<Evenement> findByCreatedDateBetweenAndIsValidate (Date start, Date end);
     Page<Evenement> findByTitle(String title, Pageable pageable);
     Page<Evenement> findByTitleContainingIgnoreCase(String title, Pageable pageable);
    //@Query(value="{ 'tag.$tagName' : ?0 }")

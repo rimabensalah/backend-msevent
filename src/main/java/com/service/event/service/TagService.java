@@ -22,6 +22,7 @@ public class TagService {
         Map<String, Integer> postCountByTag = new HashMap<>();
 
         List<Evenement> posts = postRepository.findAll();
+
         for (Evenement post : posts) {
             for (Tag tag : post.getTags()) {
                 String tagName = tag.getTagName();
@@ -30,7 +31,49 @@ public class TagService {
             }
         }
 
+        List<Tag> allTags = tagRepo.findAll();
+        for (Tag tag : allTags) {
+            String tagName = tag.getTagName();
+            postCountByTag.putIfAbsent(tagName, 0);
+        }
+
         return postCountByTag;
+    }
+
+    public Map<String, Map<String, Integer>> getPostCountByTag2() {
+        Map<String, Map<String, Integer>> tagInfoMap = new HashMap<>();
+
+        List<Evenement> posts = postRepository.findAll();
+
+        for (Evenement post : posts) {
+            for (Tag tag : post.getTags()) {
+                String tagId = tag.getId();
+                String tagName = tag.getTagName();
+
+                if (!tagInfoMap.containsKey(tagId)) {
+                    tagInfoMap.put(tagId, new HashMap<>());
+                }
+
+                Map<String, Integer> tagInfo = tagInfoMap.get(tagId);
+                int postCount = tagInfo.getOrDefault(tagName, 0);
+                tagInfo.put(tagName, postCount + 1);
+            }
+        }
+
+        List<Tag> allTags = tagRepo.findAll();
+        for (Tag tag : allTags) {
+            String tagId = tag.getId();
+            String tagName = tag.getTagName();
+
+            if (!tagInfoMap.containsKey(tagId)) {
+                tagInfoMap.put(tagId, new HashMap<>());
+            }
+
+            Map<String, Integer> tagInfo = tagInfoMap.get(tagId);
+            tagInfo.putIfAbsent(tagName, 0);
+        }
+
+        return tagInfoMap;
     }
     //add new tag
     public Tag saveTag(Tag tag){

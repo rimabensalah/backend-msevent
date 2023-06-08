@@ -9,7 +9,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-//@CrossOrigin("*")
+@CrossOrigin("*")
 @Controller
 public class NotificationController {
     private SimpMessagingTemplate messagingTemplate;

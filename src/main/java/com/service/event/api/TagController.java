@@ -55,7 +55,10 @@ public class TagController {
         Map<String, Integer> postCountByTag = tagService.getPostCountByTag();
         return ResponseEntity.ok(postCountByTag);
     }
-
+    @GetMapping("/Count2")
+    public Map<String, Map<String, Integer>> getPostCountByTag2() {
+        return tagService.getPostCountByTag2();
+    }
     @PostMapping("/addtag")
     public ResponseEntity<?> addTag(@RequestBody Tag tag){
         if(tagRepo.existsByTagName(tag.getTagName()))
@@ -88,6 +91,15 @@ public class TagController {
     @GetMapping("/tag/{id}")
     public ResponseEntity<Tag> getTagById(@PathVariable("id") Long id){
         Optional<Tag> tagData=tagRepo.findById(id);
+        if(tagData.isPresent())
+            return new ResponseEntity<>(tagData.get(),HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    //get tag by tagName
+    @GetMapping("/gettag/{name}")
+    public ResponseEntity<Tag> getTagByname(@PathVariable("name") String name){
+        Optional<Tag> tagData=tagRepo.findByTagName(name);
         if(tagData.isPresent())
             return new ResponseEntity<>(tagData.get(),HttpStatus.OK);
         else
