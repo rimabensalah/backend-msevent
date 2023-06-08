@@ -51,7 +51,7 @@ public class SendinblueTransactionalEmailsApi {
         }
     }
 
-    public void sendCommentNotification(String toEmail,String commentText){
+   /* public void sendCommentNotification(String toEmail,String commentText){
         try {
             ApiClient defaultClient = Configuration.getDefaultApiClient();
             defaultClient.setApiKey("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");
@@ -76,7 +76,7 @@ public class SendinblueTransactionalEmailsApi {
             System.err.println("Exception when calling TransactionalEmailsApi#sendTransacEmail");
             e.printStackTrace();
         }
-    }
+    }*/
 
 
 }

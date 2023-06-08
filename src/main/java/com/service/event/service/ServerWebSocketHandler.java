@@ -64,7 +64,7 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
             }
         }
     }
-    public void notifyCommentAdded2(Evenement post, Comment comment, String postCreator)
+   /* public void notifyCommentAdded2(Evenement post, Comment comment, String postCreator)
             throws IOException {
         String message = String.format("Comment added to post '%s' by %s: '%s'",
                 post.getTitle(), postCreator, comment.getContent());
@@ -79,7 +79,7 @@ public class ServerWebSocketHandler extends TextWebSocketHandler implements SubP
                 }
             }
         }
-    }
+    }*/
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {

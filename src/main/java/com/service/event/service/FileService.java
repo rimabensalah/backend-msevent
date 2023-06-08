@@ -35,7 +35,14 @@ public class FileService {
 
     //get image
     public EventFile getPhoto (String id) {
-        return fileRepo.findById(id).get();
+        if(fileRepo.findById(id).isPresent()){
+        //  EventFile file= fileRepo.findById(id).get();
+            return fileRepo.findById(id).get();
+        }else{
+            return null;
+        }
+
+
     }
 
 
