@@ -287,7 +287,8 @@ public class EventController {
             @PathVariable(value = "eventID") Long eventID,
             //@RequestBody Comment commentRequest,
             @RequestParam("comment") String commentReq,
-            @RequestParam(value = "commentimage", required = false) MultipartFile image
+            @RequestParam(value = "commentimage", required = false) MultipartFile image,
+            @RequestParam(value = "notifsettings",required = false) boolean notifsettings
     ) throws IOException {
         try {
             Comment commentRequest = new ObjectMapper().readValue(commentReq, Comment.class);
@@ -339,7 +340,7 @@ public class EventController {
               /*notifService.sendNotification("ryma.bensalah@esprit.tn",
                       "New Like on Post",
                       "Your post has been liked by someone.");*/
-          /*final String url = "http://localhost:3000/singleevent/${eventID}";
+          /*final String url = "http://localhost:3000/singleevent/${eventID}"
             sendinblue.sendMail("new comment is added", eventData.getUser().getUsername(), "ryma.bensalah@esprit.tn",
                     "Visit this url : "+ url);*/
            /* String toEmail = "ryma.bensalah@esprit.tn";
@@ -347,7 +348,10 @@ public class EventController {
             final String url = "http://localhost:3000/singleevent/"+eventID;
             Content content = new Content("text/plain", "new comment is added ," +
                     " to more details Please click on the following link : "+ url);
-            //mailService.sendTextEmail("new comment is added",content);
+            if(notifsettings){
+                mailService.sendTextEmail("new comment is added",content);
+           }
+
             serverWebSocketHandler.notifyCommentAdded(eventData,commentRepo.save(commentRequest));
             //serverWebSocketHandler.notifyCommentAdded2(eventData,commentRepo.save(commentRequest),eventData.getUser().getUsername());
             return ResponseEntity.ok(eventRepo.save(eventData));
