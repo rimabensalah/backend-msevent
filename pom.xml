@@ -171,7 +171,8 @@
     <distributionManagement>
         <snapshotRepository>
             <id>soprahr-snapshots</id>
-            <url>http://hra-nexus.ptx.fr.sopra/content/repositories/soprahr-snapshots</url>
+            <name>soprahr-snapshots</name>
+            <url>http://localhost:8081/repository/soprahr-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
     <build>
