@@ -24,6 +24,8 @@ public class UserController {
     @Autowired
     private UserRepository userRepo;
     @Autowired
+    private SendinblueTransactionalEmailsApi  mailService;
+    @Autowired
     BookmarkedEventService bookmarkedEventService;
     @PostMapping("/addBookmarked")
     public ResponseEntity<?> addBookmarked(
@@ -44,6 +46,12 @@ public class UserController {
     @GetMapping("/retreivebookmarked/{userid}")
     public ResponseEntity<?> getBookmarkedEvent(@PathVariable("userid") long userid ){
         return  new ResponseEntity<>(bookmarkedEventService.findBookmarkedByuser(userid), HttpStatus.OK);
+    }
+
+    @PostMapping("/send-text")
+    public void send() throws IOException {
+         mailService.sendMail("test","ryma","rymabnslh@gmail.com","test send email");
+
     }
 
 

@@ -23,12 +23,12 @@ public class SendinblueTransactionalEmailsApi {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         // Configure API key authorization: api-key
         ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
-        apiKey.setApiKey("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");
+        apiKey.setApiKey("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");
 
         try {
             TransactionalEmailsApi api = new TransactionalEmailsApi();
             SendSmtpEmailSender sender = new SendSmtpEmailSender();
-            sender.setEmail("g.meda69@gmail.com");
+            sender.setEmail("rymabnslh@gmail.com");
             sender.setName("Ryma");
             List<SendSmtpEmailTo> toList = new ArrayList<>();
             SendSmtpEmailTo to = new SendSmtpEmailTo();
@@ -39,7 +39,7 @@ public class SendinblueTransactionalEmailsApi {
             SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.setSender(sender);
             sendSmtpEmail.setTo(toList);
-            sendSmtpEmail.setTemplateId(1L);
+           // sendSmtpEmail.setTemplateId(1L);
             sendSmtpEmail.setHtmlContent("<html><body>" + content + "</body></html>");
             sendSmtpEmail.setSubject(subject);
 

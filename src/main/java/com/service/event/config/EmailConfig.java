@@ -15,8 +15,8 @@ public class EmailConfig {
         mailSender.setHost("smtp-relay.sendinblue.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername("g.meda69@gmail.com");
-        mailSender.setPassword("XzGSfO9IWk7aF8hL");
+        mailSender.setUsername("rymabnslh@gmail.com");
+        mailSender.setPassword("BrND6XVJCsHykh9f");
 
 
         Properties props = mailSender.getJavaMailProperties();

@@ -66,6 +66,8 @@ public class EventService {
     private NotificationStorgeRepository notificationStorgeRepository;
     @Autowired
     MailService mailService;
+    @Autowired
+    public SendinblueTransactionalEmailsApi sendinblue;
     public EventService(MongoOperations mongoOperations) {
         this.mongoOperations = mongoOperations;
     }
@@ -197,9 +199,11 @@ public class EventService {
 
       // émettre l'événement de commentaire ajouté
       final String url = "http://localhost:3000/singleevent/"+eventid;
-      Content content = new Content("text/plain", "new like is added  from ," +comment.getFromUser().getUsername()+
-              " to more details Please click on the following link : "+ url);
-      mailService.sendTextEmail("new like is added" +comment.getFromUser().getUsername(),content);
+      String content ="new like is added  from ," +comment.getFromUser().getUsername()+
+              " to more details Please click on the following link : "+ url;
+    //  mailService.sendTextEmail("new like is added" +comment.getFromUser().getUsername(),content);
+      sendinblue.sendMail("new like is added" +comment.getFromUser().getUsername(),
+              comment.getFromUser().getUsername(),"rymabnslh@gmail.com",content);
         return commentRepo.save(comment);
     }
 
@@ -313,7 +317,12 @@ public class EventService {
                 .userFrom(evenementData.getUser())
                 .userTo(comment.getFromUser())
                 .createdAt(new Date()).build());
-
+        final String url = "http://localhost:3000/singleevent/"+eventid;
+        String content ="your comment is validated  from  ," +comment.getFromUser().getUsername()+
+                " to more details Please click on the following link : "+ url;
+        //  mailService.sendTextEmail("new like is added" +comment.getFromUser().getUsername(),content);
+        sendinblue.sendMail("comment is validated " + evenementData.getUser().getUsername(),
+                comment.getFromUser().getUsername(),"rymabnslh@gmail.com",content);
         return eventRepo.findEvenementById(eventid).get();
     }
 

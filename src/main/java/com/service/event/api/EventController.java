@@ -56,6 +56,8 @@ public class EventController {
     ServerWebSocketHandler  serverWebSocketHandler;
     @Autowired
     MailService mailService;
+    @Autowired
+    private SendinblueTransactionalEmailsApi  mailService2;
     /* @GetMapping("/stream")
      public Flux<ServerSentEvent<List<Evenement>>> streamPosts() {
          return postService.streamPosts();
@@ -346,10 +348,13 @@ public class EventController {
            /* String toEmail = "ryma.bensalah@esprit.tn";
             sendinblue.sendCommentNotification(toEmail,"Visit this url : "+ url);*/
             final String url = "http://localhost:3000/singleevent/"+eventID;
-            Content content = new Content("text/plain", "new comment is added ," +
-                    " to more details Please click on the following link : "+ url);
+            String content = "new comment is added ," +
+                    " to more details Please click on the following link : "+ url;
+
             if(notifsettings){
-                mailService.sendTextEmail("new comment is added",content);
+               // mailService.sendTextEmail("new comment is added",content);
+                mailService2.sendMail("new comment is added",
+                        "ryma","rymabnslh@gmail.com",content);
            }
 
             serverWebSocketHandler.notifyCommentAdded(eventData,commentRepo.save(commentRequest));
